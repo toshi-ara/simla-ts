@@ -139,6 +139,9 @@ It is also possible to use
 
 
 ## ChangeLog
+### v1.2.2 (2024-10-18)
+- update dependent packages
+
 ### (2024-10-18)
 - Add one reference
 
