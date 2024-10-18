@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13951488.svg)](https://doi.org/10.5281/zenodo.13951488)
+
 # Simulator for local anesthetic agents
 ## Summary
 - This program is a computer-based simulator
