@@ -79,6 +79,12 @@ A paper on the model formula and parameter values used in this simulator.
    with Bayesian Hierarchical Model Parameter Estimation.
   Medicines 2023, 10(11), 61
   (https://doi.org/10.3390/medicines10110061)
+- Toshiaki Ara and Hiroyuki Kitamura:
+  Improvement of statistical models by considering correlations
+   among parameters:
+  Local anesthetic agent simulator for pharmacological education
+   2024, 4(4), 2133-2148
+  (https://doi.org/10.3390/biomedinformatics4040114)
 
 
 ## How to build the environment (for teachers)
@@ -133,6 +139,9 @@ It is also possible to use
 
 
 ## ChangeLog
+### (2024-10-18)
+- Add one reference
+
 ### v1.2.1 (2024-7-15)
 - Disable pinch-in in canvas area
 

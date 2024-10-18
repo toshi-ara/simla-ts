@@ -67,6 +67,12 @@
    with Bayesian Hierarchical Model Parameter Estimation.
   Medicines 2023, 10(11), 61
   (https://doi.org/10.3390/medicines10110061)
+- Toshiaki Ara and Hiroyuki Kitamura:
+  Improvement of statistical models by considering correlations
+   among parameters:
+  Local anesthetic agent simulator for pharmacological education
+   2024, 4(4), 2133-2148
+  (https://doi.org/10.3390/biomedinformatics4040114)
 
 
 ## 環境構築について（教員用）
@@ -118,6 +124,9 @@ GitHub上の[別リポジトリのコード](https://github.com/toshi-ara/simla)
 
 
 ## 変更履歴
+### (2024-10-18)
+- 参考文献を追加
+
 ### v1.2.1 (2024-7-15)
 - 画像部におけるピンチイン操作を無効化
 
