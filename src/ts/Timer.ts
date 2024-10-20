@@ -38,7 +38,7 @@ export default class Timer {
         return this.timeFormat(this.getTime(speed));
     }
 
-    private getTime(speed: number): number {
+    getTime(speed: number): number {
         let t;
         if (this.isRunning) {
             this._elapsed = (Date.now() - this._start) * speed;
