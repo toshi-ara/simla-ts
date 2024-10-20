@@ -65,7 +65,7 @@ export default class SimLocalAnesthesia {
         this.elem_lang.addEventListener("change",
             () => {this.toggleLang()}, false);
         this.elem_slider.addEventListener("input",
-            () => {this.sliderChanged()}, false);
+            () => {this.changeSpeed()}, false);
         this.elem_canvas.addEventListener(clickEventType,
             (e: ClickEvent) => {
                 this.clickCanvas(this.elem_canvas, context, e)
@@ -150,7 +150,7 @@ export default class SimLocalAnesthesia {
         if (this.timer.isRunning) {
             lab = Labels.pause;
         } else {
-            if (this.timer.getTotalTime == 0) {
+            if (this.timer.getTime == 0) {
                 lab = Labels.start;
             } else {
                 lab = Labels.restart;
@@ -197,6 +197,8 @@ export default class SimLocalAnesthesia {
             window.alert(Labels.msg_close[this.lang]);
             this.elem_start.textContent = Labels.start[this.lang];
             this.timer.clickQuit();
+            this.elem_slider.value = "1";
+            this.changeSpeed();
             this.param.clearStorage();
             this.clearStorage();
         }
@@ -217,9 +219,10 @@ export default class SimLocalAnesthesia {
     //////////////////////////////////
     // change slider
     //////////////////////////////////
-    private sliderChanged(): void {
-        this.printSpeed(this.elem_slider.value)
-        this.timer.sliderChanged();
+    private changeSpeed(): void {
+        let speed: string = this.elem_slider.value;
+        this.printSpeed(speed)
+        this.timer.changeSpeed(Number(speed));
         this.setStorageSpeed();
     }
 
@@ -340,7 +343,7 @@ export default class SimLocalAnesthesia {
     //////////////////////////////////
     // display timer
     displayTimer(): void {
-        this.elem_timer.textContent = this.timer.getTimeStr(Number(this.elem_slider.value));
+        this.elem_timer.textContent = this.timer.getTimeStr;
         requestAnimationFrame(() => {this.displayTimer()});
     }
 

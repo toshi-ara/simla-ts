@@ -3,6 +3,7 @@ export default class Timer {
     private _start: number;
     private _elapsed: number;
     private _total: number;
+    private _speed: number;
     private storageName: string;
 
     constructor() {
@@ -10,6 +11,7 @@ export default class Timer {
         this._start = Date.now();
         this._elapsed = 0;
         this._total = 0;
+        this._speed = 1;
         this.storageName = "SimLaTime";
 
         // restore parameters if data is saved in localStorage
@@ -19,6 +21,7 @@ export default class Timer {
             this._start = storage.start;
             this._elapsed = storage.elapsed;
             this._total = storage.total;
+            this._speed = storage.speed;
         }
     }
 
@@ -27,26 +30,22 @@ export default class Timer {
     }
 
     get getMinute(){
-        return (this._total + this._elapsed) / 60000;
+        return this.getTime / 60000;
     };
 
-    get getTotalTime(): number {
-        return this._total;
-    };
-
-    getTimeStr(speed: number): string {
-        return this.timeFormat(this.getTime(speed));
-    }
-
-    getTime(speed: number): number {
+    get getTime(): number {
         let t;
         if (this.isRunning) {
-            this._elapsed = (Date.now() - this._start) * speed;
+            this._elapsed = (Date.now() - this._start) * this._speed;
             t = this._total + this._elapsed;
         } else {
             t = this._total;
         }
         return t;
+    }
+
+    get getTimeStr(): string {
+        return this.timeFormat(this.getTime);
     }
 
     private timeFormat(t: number) {
@@ -87,16 +86,18 @@ export default class Timer {
             this._start = Date.now();
             this._elapsed = 0;
             this._total = 0;
+            this._speed = 1;
             this.clearStorage();
         }
     };
 
     // change slider
-    sliderChanged() {
+    changeSpeed(speed: number) {
         if (this.isRunning) {
             this._total += this._elapsed;
             this._start = Date.now();
             this._elapsed = 0;
+            this._speed = speed;
             this.setStorage();
         }
     };
@@ -110,7 +111,8 @@ export default class Timer {
             isRunning: this._isRunning,
             start: this._start,
             elapsed: this._elapsed,
-            total: this._total
+            total: this._total,
+            speed: this._speed
         }));
     }
 
