@@ -1,7 +1,8 @@
 import {
     isInCircle,
     getCircleNumber,
-    getProbability
+    getProbability,
+    getProbabilityDrug
 } from "../src/ts/SimLocalAnesthesia_func";
 
 
@@ -11,6 +12,8 @@ const radius = 20;
 
 const param1 = [50, 10, 0];
 const param2 = [50, 10, 0.7];
+const param = [[0, 0, 0], param1, param2];
+
 let digits = 6;
 
 
@@ -91,16 +94,42 @@ describe("Check functions in SimLocalAnesthesia.ts", () => {
     it("Check getProbability function", () => {
         // without adr
         // phi(-0.7)
-        expect(getProbability(43, param1)).toBeCloseTo(0.241963652223073, digits);
+        expect(getProbability(43, param1))
+            .toBeCloseTo(0.241963652223073, digits);
         // phi(0)
-        expect(getProbability(50, param1)).toBeCloseTo(0.5, digits);
+        expect(getProbability(50, param1))
+            .toBeCloseTo(0.5, digits);
         // phi(0.5)
-        expect(getProbability(55, param1)).toBeCloseTo(0.691462461274013, digits);
+        expect(getProbability(55, param1))
+            .toBeCloseTo(0.691462461274013, digits);
         // phi(1.5)
-        expect(getProbability(65, param1)).toBeCloseTo(0.9331927987311419, digits);
+        expect(getProbability(65, param1))
+            .toBeCloseTo(0.9331927987311419, digits);
 
         // with adr
-        expect(getProbability(120, param2)).toBeCloseTo(0.08075665923, digits);
+        expect(getProbability(120, param2))
+            .toBeCloseTo(0.08075665923, digits);
+    })
+
+    it("Check getProbabilityDrug function", () => {
+        // Saline
+        expect(getProbabilityDrug(0, 10, param)).toBeCloseTo(0.99, digits);
+        expect(getProbabilityDrug(0, 60, param)).toBeCloseTo(1, digits);
+
+        // without adr
+        expect(getProbabilityDrug(1, 20, param))
+            .toBeCloseTo(0, digits);
+        expect(getProbabilityDrug(1, 43, param))
+            .toBeCloseTo(0.241963652223073, digits);
+        expect(getProbabilityDrug(1, 50, param))
+            .toBeCloseTo(0.5, digits);
+        expect(getProbabilityDrug(1, 65, param))
+            .toBeCloseTo(0.9331927987311419, digits);
+
+        // with adr
+        expect(getProbabilityDrug(2, 120, param))
+            .toBeCloseTo(0.08075665923, digits);
+
     })
 });
 
