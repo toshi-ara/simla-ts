@@ -51,15 +51,14 @@ export function getProbability(time: number, param: number[]): number {
     return phi((X - param[0]) / param[1], true)
 }
 
-// Return "respond / not respond" with random number
-//   from time (min) and parameters
+// Return probability to respond from drug, time (min) and parameters
 //
 // Args
 //   num: kind of drug (integer)
 //   time:  minute
 //   param[mu, sigma, adr]
-// Return: true/false
-export function getResponse(num: number, time: number, param: number[][]): boolean {
+// Return: prob (0-1)
+export function getProbabilityDrug(num: number, time: number, param: number[][]): number {
     let prob;
     if (num == 0) {
         // saline
@@ -70,11 +69,23 @@ export function getResponse(num: number, time: number, param: number[][]): boole
         prob = getProbability(time, param[num]);
         // not respond when probability is less than threshold
         if (prob < ProbThreshold) {
-            return false
+            return 0;
         }
     }
-    // return respond / not respond with random number
-    //   under calculated probability
+
+    return prob
+}
+
+// Return "respond / not respond" with random number
+//   from time (min) and parameters
+//
+// Args
+//   num: kind of drug (integer)
+//   time:  minute
+//   param[mu, sigma, adr]
+// Return: true/false
+export function getResponse(num: number, time: number, param: number[][]): boolean {
+    const prob = getProbabilityDrug(num, time, param);
     return Math.random() <= prob
 }
 
