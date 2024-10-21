@@ -27,6 +27,17 @@ describe("Check Timer class", () => {
         // stop
         timer.clickStart()
         expect(timer.isRunning).toEqual(false);
+
+        // quit (in not running)
+        timer.clickQuit()
+        expect(timer.isRunning).toEqual(false);
+
+        // quit (in running)
+        timer.clickStart() // isRunning => true
+        expect(timer.isRunning).toEqual(true);
+
+        // stop
+        timer.clickStart()
     });
 
     it("Check getTime/changeSpeed function", () => {
@@ -64,7 +75,10 @@ describe("Check Timer class", () => {
         expect(timer.getTime).toEqual(30000);
 
         // stop
+        // no change
         timer.clickStart()
+        jest.advanceTimersByTime(1000);
+        expect(timer.getTime).toEqual(30000);
     });
 
     it("Check getMinute/changeSpeed function", () => {
