@@ -139,6 +139,12 @@ It is also possible to use
 
 
 ## ChangeLog
+### v2.0.0 (2024-10-21)
+- Fix class Timer
+- Refacting codes
+- Add Test codes
+- Add CI code (Continuous Integration)
+
 ### v1.2.2 (2024-10-18)
 - update dependent packages
 
