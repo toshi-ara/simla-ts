@@ -3,7 +3,11 @@ import Labels from "./Labels";
 import Parameter from "./Parameter";
 import Draw from "./Draw";
 import Timer from "./Timer";
-import { phi } from "./MyStat";
+import {
+    getCircleNumber,
+    getResponse
+} from "./SimLocalAnesthesia_func";
+
 
 type ClickEvent = MouseEvent | TouchEvent;
 type Position = [number, number];
@@ -101,12 +105,12 @@ export default class SimLocalAnesthesia {
         if (!this.timer.isRunning) { return }
         // running
         const pos = this.getClickedPosition(canvas, e);
-        const site = this.getCircleNumber(pos, ConstVal.CENTERS, ConstVal.Rnormal);
+        const site = getCircleNumber(pos, ConstVal.CENTERS, ConstVal.Rnormal);
 
         if (site < 0) { return }
         // when clicked in circles
-        const isResponse = this.getResponse(site, this.timer.getMinute,
-                                            this.param.getParameter);
+        const isResponse = getResponse(site, this.timer.getMinute,
+                                       this.param.getParameter);
 
         if (isResponse) {
             // effects with response
@@ -271,72 +275,6 @@ export default class SimLocalAnesthesia {
         return position
     }
 
-    // Return whether position is present in circle
-    //
-    // Args:
-    //   position: position of mouse click
-    //   center: position of center of circle
-    //   radius:
-    // Return: true/false
-    private isInCircle(position: Position, center: number[], radius: number): boolean {
-        const l2 = Math.pow(position[0] - center[0], 2) +
-                   Math.pow(position[1] - center[1], 2);
-        return l2 <= Math.pow(radius, 2);
-    }
-
-    // Return the number which circle coordinate is present
-    //
-    // Args:
-    //   centers: 2D-array of coordinates of the center of the circle
-    //   radius
-    // Return: circle number
-    //   (return -1 when coordinate is out of circles)
-    private getCircleNumber(position: Position,
-                            centers: number[][], radius: number): number {
-        let result = -1;
-        for (let i = 0; i < centers.length; i++) {
-            if (this.isInCircle(position, centers[i], radius)) {
-                result = i
-            }
-        }
-        return result
-    }
-
-    // Return probability to respond from time (min) and parameters
-    //
-    // Args:
-    //   time (min)
-    //   param[mu, sigma, adr]
-    // Return: probability (0-1)
-    private getProbability(time: number, param: number[]): number {
-        let X = 100 - (1 - param[2]) * time;
-        return phi((X - param[0]) / param[1], true)
-    }
-
-    // Return "respond / not respond" with random number
-    //   from time (min) and parameters
-    //
-    // Args
-    //   num: kind of drug (integer)
-    //   time:  minute
-    //   param[mu, sigma, adr]
-    // Return: true/false
-    private getResponse(num: number, time: number, param: number[][]): boolean {
-        let prob;
-        if (num == 0) {
-            // saline
-            prob = 0.99;
-        } else {
-            prob = this.getProbability(time, param[num]);
-            // not respond when probability is less than threshold
-            if (prob < ConstVal.ProbThreshold) {
-                return false
-            }
-        }
-        // return respond / not respond with random number
-        //   under calculated probability
-        return Math.random() <= prob
-    }
 
     //////////////////////////////////
     // timer
