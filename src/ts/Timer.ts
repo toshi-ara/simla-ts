@@ -1,130 +1,101 @@
 export default class Timer {
-    private _isRunning: boolean;
-    private _start: number;
-    private _elapsed: number;
-    private _total: number;
-    private _speed: number;
-    private storageName: string;
+    protected _isRunning: boolean;
+    protected _start: number;
+    protected _elapsed: number;
+    protected _total: number;
+    protected _speed: number;
 
     constructor() {
         this._isRunning = false;
-        this._start = Date.now();
+        this._start = 0;
         this._elapsed = 0;
         this._total = 0;
         this._speed = 1;
-        this.storageName = "SimLaTime";
-
-        // restore parameters if data is saved in localStorage
-        const storage = this.getStorage();
-        if (Object.keys(storage).length > 0) {
-            this._isRunning = storage.isRunning;
-            this._start = storage.start;
-            this._elapsed = storage.elapsed;
-            this._total = storage.total;
-            this._speed = storage.speed;
-        }
     }
 
     get isRunning(): boolean {
         return this._isRunning;
     }
 
+    // get time as minute
     get getMinute(){
         return this.getTime / 60000;
     };
 
+    // get time as msec
     get getTime(): number {
         let t;
         if (this.isRunning) {
-            this._elapsed = (Date.now() - this._start) * this._speed;
-            t = this._total + this._elapsed;
+            t = this._total + this.getElaplsed();
         } else {
             t = this._total;
         }
         return t;
     }
 
+    // get time as "0:00:00"
     get getTimeStr(): string {
         return this.timeFormat(this.getTime);
     }
 
-    private timeFormat(t: number) {
+    // get as "0:00:00"
+    protected timeFormat(t: number) {
         return Math.floor(t / 36e5) + new Date(t).toISOString().slice(13, 19);
     }
 
+    // get elapsed time (from start/restart to Now) * speed
+    protected getElaplsed(): number {
+        return (Date.now() - this._start) * this._speed;
+    }
+
     //////////////////////////////////
-    // push buttons / change slider
+    // push buttons / change speed
     //////////////////////////////////
-    // push new experiment button
+
+    // push New Experiment Button
     clickNewExp() {
         if (!this.isRunning) {
-            this._isRunning = false;
-            this._start = Date.now();
             this._elapsed = 0;
             this._total = 0;
-            this.setStorage();
         }
     };
 
-    // push start/restart/pause button
+    // push Start/Restart/Pause Button
     clickStart() {
         if (!this.isRunning) { // before start / in pause
-            this._isRunning = true;   // running
             this._start = Date.now();
             this._elapsed = 0;
+            // this._isRunning = true;   // => running
         } else { // in running
-            this._isRunning = false;  // pause
+            this._elapsed = this.getElaplsed();
             this._total += this._elapsed;
+            // this._isRunning = false;  // => pause
         }
-        this.setStorage();
+        this._isRunning = !this._isRunning;
     };
 
-    // push quit button
+    // push Quit Button
     clickQuit() {
-        if (!this.isRunning) {
-            this._isRunning = false;
-            this._start = Date.now();
+        if (!this.isRunning) { // before start / in pause
             this._elapsed = 0;
             this._total = 0;
             this._speed = 1;
-            this.clearStorage();
         }
     };
 
-    // change slider
+    // change Speed
     changeSpeed(speed: number) {
         if (this.isRunning) {
-            this._total += this._elapsed;
+            // add total time and elapsed time (x previous speed)
+            this._total += this.getElaplsed();
+
+            // reset start and elapsed time
             this._start = Date.now();
             this._elapsed = 0;
-            this._speed = speed;
-            this.setStorage();
         }
+
+        // set new speed
+        this._speed = speed;
     };
-
-    //////////////////////////////////
-    // localStrage
-    //////////////////////////////////
-    // save data to localStorage
-    setStorage() {
-        localStorage.setItem(this.storageName, JSON.stringify({
-            isRunning: this._isRunning,
-            start: this._start,
-            elapsed: this._elapsed,
-            total: this._total,
-            speed: this._speed
-        }));
-    }
-
-    // get data in localStorage
-    getStorage() {
-        const params = localStorage.getItem(this.storageName);
-        return params ? JSON.parse(params) : {};
-    }
-
-    // delete data in localStorage
-    clearStorage() {
-        localStorage.removeItem(this.storageName);
-    }
 }
 

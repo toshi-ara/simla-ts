@@ -2,7 +2,7 @@ import * as ConstVal from "./ConstVal";
 import { Labels } from "./Labels";
 import Parameter from "./Parameter";
 import Draw from "./Draw";
-import Timer from "./Timer";
+import TimerStorage from "./TimerStorage";
 import {
     getCircleNumber,
     getResponse
@@ -14,7 +14,7 @@ type Position = [number, number];
 
 export default class SimLocalAnesthesia {
     private lang: string;
-    private timer: Timer;
+    private timer: TimerStorage;
     private param: Parameter;
     private elem_newexp: HTMLInputElement;
     private elem_start: HTMLInputElement;
@@ -27,7 +27,7 @@ export default class SimLocalAnesthesia {
     private elem_canvas: HTMLCanvasElement;
 
     constructor() {
-        this.timer = new Timer();
+        this.timer = new TimerStorage();
         this.param = new Parameter();
 
         // objects for elements
@@ -109,6 +109,7 @@ export default class SimLocalAnesthesia {
 
         if (site < 0) { return }
         // when clicked in circles
+        console.log(this.timer.getTimeStr);
         const isResponse = getResponse(site, this.timer.getMinute,
                                        this.param.getParameter);
 

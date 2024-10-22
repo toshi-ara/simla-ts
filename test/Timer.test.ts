@@ -1,20 +1,20 @@
 import Timer from "../src/ts/Timer";
 
-// disable to save/load local strage
-class Timer2 extends Timer {
-    setStorage() {}
-    getStorage() {
-        return {};
-    }
-    clearStorage() {}
-}
+// // disable to save/load local strage
+// class Timer2 extends Timer {
+//     setStorage() {}
+//     getStorage() {
+//         return {};
+//     }
+//     clearStorage() {}
+// }
 
 
 jest.useFakeTimers();
 
 describe("Check Timer class", () => {
     it("Check isRunning/click* functions", () => {
-        let timer = new Timer2();
+        let timer = new Timer();
 
         // befor start
         timer.clickNewExp();
@@ -41,7 +41,7 @@ describe("Check Timer class", () => {
     });
 
     it("Check getTime/changeSpeed function", () => {
-        let timer = new Timer2();
+        let timer = new Timer();
         jest.runAllTimers()
 
         // befor start
@@ -82,7 +82,7 @@ describe("Check Timer class", () => {
     });
 
     it("Check getMinute/changeSpeed function", () => {
-        let timer = new Timer2();
+        let timer = new Timer();
         jest.runAllTimers()
 
         // befor start
@@ -119,8 +119,43 @@ describe("Check Timer class", () => {
         timer.clickStart()
     });
 
+    it("Check getMinute/changeSpeed function ver. 2", () => {
+        let timer = new Timer();
+        jest.runAllTimers()
+
+        // befor start
+        timer.clickNewExp();
+
+        // start
+        timer.clickStart();
+
+        // pass 3 sec
+        //  => 3000 (msec)
+        jest.advanceTimersByTime(3000);
+
+        // change speed
+        // pass 3 sec (5x)
+        //  => 3000 + 3000 x 5 = 18000
+        timer.changeSpeed(5);
+        jest.advanceTimersByTime(3000);
+
+        // pass 1 sec (10x)
+        //  => 18000 + 1000 x 10 = 28000
+        timer.changeSpeed(10);
+        jest.advanceTimersByTime(1000);
+
+        // pass 2 sec (1x)
+        //  => 28000 + 2000 = 30000
+        timer.changeSpeed(1);
+        jest.advanceTimersByTime(2000);
+        expect(timer.getMinute).toEqual(30000/60000);
+
+        // stop
+        timer.clickStart()
+    });
+
     it("Check getTimeStr function", () => {
-        let timer = new Timer2();
+        let timer = new Timer();
         jest.runAllTimers()
 
         // befor start
