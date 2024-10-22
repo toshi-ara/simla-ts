@@ -1,17 +1,51 @@
-export default class Labels {
-    static start = ["開始", "Start"];
-    static restart = ["再開", "Restart"];
-    static pause = ["一時停止", "Pause"];
-    static newexp = ["新規実験", "New Exp."];
-    static quit = ["終了", "Quit"];
-    static with_response = ["反応あり", "Respond"];
-    static without_response = ["反応なし", "Not Respond"];
-    static speed = ["倍速", "x speed"];
-    static msg_newexp = ["新規実験を行いますか?",
-                         "Do you want to start a new experiment?"];
-    static msg_quit = ["終了しますか?",
-                       "Do you want to quit?"];
-    static msg_close = ["ブラウザあるいはこのタブを閉じて下さい",
-                        "Please close the browser or this tab"];
+type TypeLang = { [key: string]: string };
+type TypeStr = { [key: string]: TypeLang };
+
+
+export const Labels: TypeStr = {
+    "start": {
+        "en": "Start",
+        "ja": "開始"
+    },
+    "restart": {
+        "en": "Restart",
+        "ja": "再開"
+    },
+    "pause": {
+        "en": "Pause",
+        "ja": "一時停止"
+    },
+    "newexp": {
+        "en": "New Exp.",
+        "ja": "新規実験"
+    },
+    "quit": {
+        "en": "Quit",
+        "ja": "終了"
+    },
+    "with_response": {
+        "en": "Respond",
+        "ja": "反応あり"
+    },
+    "without_response": {
+        "en": "Not Respond",
+        "ja": "反応なし"
+    },
+    "speed": {
+        "en": "x speed",
+        "ja": "倍速"
+    },
+    "msg_newexp": {
+        "en": "Do you want to start a new experiment?",
+        "ja": "新規実験を行いますか?"
+    },
+    "msg_quit": {
+        "en": "Do you want to quit?",
+        "ja": "終了しますか?"
+    },
+    "msg_close": {
+        "en": "Please close the browser or this tab",
+        "ja": "ブラウザあるいはこのタブを閉じて下さい"
+    }
 }
 
