@@ -1,5 +1,5 @@
 import * as ConstVal from "./ConstVal";
-import Labels from "./Labels";
+import { Labels } from "./Labels";
 import Parameter from "./Parameter";
 import Draw from "./Draw";
 import Timer from "./Timer";
@@ -13,7 +13,7 @@ type ClickEvent = MouseEvent | TouchEvent;
 type Position = [number, number];
 
 export default class SimLocalAnesthesia {
-    private lang: number;
+    private lang: string;
     private timer: Timer;
     private param: Parameter;
     private elem_newexp: HTMLInputElement;
@@ -39,7 +39,7 @@ export default class SimLocalAnesthesia {
         this.elem_timer = <HTMLElement>document.getElementById("timer");
         this.elem_response = <HTMLElement>document.getElementById("response");
 
-        this.elem_lang = <HTMLFormElement>document.getElementById("lang");
+        this.elem_lang = <HTMLFormElement>document.getElementById("select-lang");
         this.elem_slider = <HTMLSelectElement>document.getElementById("slider");
         this.elem_canvas = <HTMLCanvasElement>document.getElementById("canvas");
 
@@ -77,10 +77,10 @@ export default class SimLocalAnesthesia {
 
         this.elem_slider.value = this.getStorageSpeed();
         this.lang = this.getStorageLang();
-        this.elem_lang["la"][this.lang].checked = true;
+        this.elem_lang["la"].value = this.lang;
         this.setLang();
 
-        // change buttons status
+        // change buttons status (color)
         this.toggleButton();
 
         // display timer
@@ -117,7 +117,7 @@ export default class SimLocalAnesthesia {
             Draw.fillRect(context, ConstVal.CENTERS[site], ConstVal.Rrespond);
             Draw.drawCircle(context, ConstVal.CENTERS[site],
                             ConstVal.Rrespond, ConstVal.RrespondCenter, "red");
-            this.elem_response.textContent = Labels.with_response[this.lang];
+            this.elem_response.textContent = Labels["with_response"][this.lang];
             this.elem_response.style.color = "red";
             this.elem_timer.style.color = "red";
 
@@ -130,7 +130,7 @@ export default class SimLocalAnesthesia {
             }, 300);
         } else {
             // effects without response
-            this.elem_response.textContent = Labels.without_response[this.lang];
+            this.elem_response.textContent = Labels["without_response"][this.lang];
             this.elem_response.style.color = "black";
             setTimeout(() => {
                 this.elem_response.textContent = "";
@@ -150,19 +150,20 @@ export default class SimLocalAnesthesia {
 
     private setLang(): void {
         // start/restart/pause button
-        let lab;
+        // let lab;
+        let id: string;
         if (this.timer.isRunning) {
-            lab = Labels.pause;
+            id = "pause";
         } else {
             if (this.timer.getTime == 0) {
-                lab = Labels.start;
+                id = "start";
             } else {
-                lab = Labels.restart;
+                id = "restart";
             }
         }
-        this.elem_start.textContent = lab[this.lang];
-        this.elem_newexp.textContent = Labels.newexp[this.lang];
-        this.elem_quit.textContent = Labels.quit[this.lang];
+        this.elem_start.textContent = Labels[id][this.lang];
+        this.elem_newexp.textContent = Labels["newexp"][this.lang];
+        this.elem_quit.textContent = Labels["quit"][this.lang];
         this.toggleButton();
 
         // slider
@@ -173,7 +174,7 @@ export default class SimLocalAnesthesia {
     private clickNewExp(): void {
         if (this.timer.isRunning) { return }
         // in pause
-        const check = window.confirm(Labels.msg_newexp[this.lang]);
+        const check = window.confirm(Labels["msg_newexp"][this.lang]);
         if (check) {
             this.timer.clickNewExp();
             this.param.setInitParameter();
@@ -196,10 +197,10 @@ export default class SimLocalAnesthesia {
     private clickQuit(): void {
         if (this.timer.isRunning) { return }
         // in pause
-        const check = window.confirm(Labels.msg_quit[this.lang]);
+        const check = window.confirm(Labels["msg_quit"][this.lang]);
         if (check) {
-            window.alert(Labels.msg_close[this.lang]);
-            this.elem_start.textContent = Labels.start[this.lang];
+            window.alert(Labels["msg_close"][this.lang]);
+            this.elem_start.textContent = Labels["start"][this.lang];
             this.timer.clickQuit();
             this.elem_slider.value = "1";
             this.changeSpeed();
@@ -208,6 +209,7 @@ export default class SimLocalAnesthesia {
         }
     }
 
+    // change buttons status (color)
     private toggleButton(): void {
         if (this.timer.isRunning) {
             this.elem_start.style.background = "springgreen";
@@ -231,7 +233,7 @@ export default class SimLocalAnesthesia {
     }
 
     private printSpeed(speed: string): void {
-        this.elem_speed_msg.textContent = speed + Labels.speed[this.lang];
+        this.elem_speed_msg.textContent = speed + Labels["speed"][this.lang];
     }
 
     //////////////////////////////////
@@ -301,13 +303,13 @@ export default class SimLocalAnesthesia {
 
     // save data to localStorage (lang)
     private setStorageLang(): void {
-        localStorage.setItem(ConstVal.storageNameLang, String(this.lang))
+        localStorage.setItem(ConstVal.storageNameLang, this.lang)
     }
 
     // get data in localStorage (lang)
-    private getStorageLang(): number {
+    private getStorageLang(): string {
         const lang = localStorage.getItem(ConstVal.storageNameLang);
-        return lang ? Number(lang) : 0
+        return lang ? lang : "en"
     }
 
     // delete data in localStorage
