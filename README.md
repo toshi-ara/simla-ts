@@ -139,6 +139,11 @@ It is also possible to use
 
 
 ## ChangeLog
+### v2.1.0 (2024-10-23)
+- Refacting codes
+    - including separation of files
+- Fix several issues
+
 ### v2.0.0 (2024-10-21)
 - Fix class Timer
 - Refacting codes
