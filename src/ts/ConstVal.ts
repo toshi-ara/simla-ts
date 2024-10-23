@@ -56,7 +56,3 @@ export const RrespondCenter = 2;
 // threshold of probability not to respond
 export const ProbThreshold = 0.05;
 
-// name of local strage
-export const storageNameSpeed = "SimLaSpeed";
-export const storageNameLang = "SimLaLang";
-

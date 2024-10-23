@@ -1,17 +1,20 @@
 import * as ConstVal from "./ConstVal";
 import { random_norm } from "./MyStat";
 import MultivariateNormal from "multivariate-normal";
+import {
+    getStorageParam,
+    setStorageParam
+} from "./Storage"
+
 
 export default class Parameter {
     private param;
-    private storageName: string;
 
     constructor() {
         this.param = [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
-        this.storageName = "SimLaParam";
 
         // restore parameters if data is saved in localStorage
-        const storage = this.getStorage();
+        const storage = JSON.parse(getStorageParam());
         if (Object.keys(storage).length > 0) {
             this.param = storage.param;
         } else {
@@ -47,32 +50,11 @@ export default class Parameter {
         this.param[n - 1][1] = this.param[2][1]
         this.param[n - 1][2] = ConstVal.ADR
 
-        this.setStorage();
+        setStorageParam(JSON.stringify({ param: this.param }));
     }
 
     get getParameter() {
         return this.param
-    }
-
-    //////////////////////////////////
-    // localStrage
-    //////////////////////////////////
-    // save data to localStorage
-    setStorage() {
-        localStorage.setItem(this.storageName, JSON.stringify({
-            param: this.param
-        }));
-    }
-
-    // get data in localStorage
-    getStorage() {
-        const params = localStorage.getItem(this.storageName);
-        return params ? JSON.parse(params) : {};
-    }
-
-    // delete data in localStorage
-    clearStorage() {
-        localStorage.removeItem(this.storageName);
     }
 }
 
