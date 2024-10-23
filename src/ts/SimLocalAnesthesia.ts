@@ -336,14 +336,14 @@ function responseDisplay(context: CanvasRenderingContext2D,
                             ConstVal.Rnormal, ConstVal.RnormalCenter, "black");
             elem_response.textContent = "";
             elem_timer.style.color = "black";
-        }, 300);
+        }, duration);
     } else {
         // effects without response
         elem_response.textContent = Labels["without_response"][lang];
         elem_response.style.color = "black";
         setTimeout(() => {
             elem_response.textContent = "";
-        }, 300);
+        }, duration);
     }
 }
 
