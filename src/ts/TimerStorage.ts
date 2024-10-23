@@ -1,14 +1,18 @@
 import Timer from "./Timer";
+import {
+    getStorageTimer,
+    setStorageTimer,
+    clearStorageTimer
+} from "./Storage"
 
 
-const storageName = "SimLaTime";
 
 export default class TimerStorage extends Timer {
     constructor() {
         super();
 
         // restore parameters if data is saved in localStorage
-        const storage = this.getStorage();
+        const storage = JSON.parse(getStorageTimer());
         if (Object.keys(storage).length > 0) {
             this._isRunning = storage.isRunning;
             this._start = storage.start;
@@ -18,63 +22,45 @@ export default class TimerStorage extends Timer {
         }
     }
 
+    // convert paramters to JSON
+    private getJSONdata(): string {
+        return JSON.stringify({
+            isRunning: this._isRunning,
+            start: this._start,
+            elapsed: this._elapsed,
+            total: this._total,
+            speed: this._speed
+        })
+    }
 
     //////////////////////////////////
     // push buttons / change slider
     //////////////////////////////////
     // push new experiment button
     clickNewExp() {
-        if (!this.isRunning) {
-            super.clickNewExp();
-            this.setStorage();
-        }
+        if (this.isRunning) { return }
+        super.clickNewExp();
+        setStorageTimer(this.getJSONdata());
     };
 
     // push start/restart/pause button
     clickStart() {
         super.clickStart();
-        this.setStorage();
+        setStorageTimer(this.getJSONdata());
     };
 
     // push quit button
     clickQuit() {
         super.clickQuit();
         if (!this.isRunning) {
-            this.clearStorage();
+            clearStorageTimer();
         }
     };
 
     // change slider
     changeSpeed(speed: number) {
         super.changeSpeed(speed);
-        if (this.isRunning) {
-            this.setStorage();
-        }
+        setStorageTimer(this.getJSONdata());
     };
-
-    //////////////////////////////////
-    // localStrage
-    //////////////////////////////////
-    // save data to localStorage
-    setStorage() {
-        localStorage.setItem(storageName, JSON.stringify({
-            isRunning: this._isRunning,
-            start: this._start,
-            elapsed: this._elapsed,
-            total: this._total,
-            speed: this._speed
-        }));
-    }
-
-    // get data in localStorage
-    getStorage() {
-        const params = localStorage.getItem(storageName);
-        return params ? JSON.parse(params) : {};
-    }
-
-    // delete data in localStorage
-    clearStorage() {
-        localStorage.removeItem(storageName);
-    }
 }
 

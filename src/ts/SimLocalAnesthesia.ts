@@ -8,9 +8,19 @@ import {
     getResponse
 } from "./SimLocalAnesthesia_func";
 
+import {
+    getStorageSpeed,
+    setStorageSpeed,
+    getStorageLang,
+    setStorageLang,
+    clearStorage,
+    clearStorageTimer
+} from "./Storage"
+
 
 type ClickEvent = MouseEvent | TouchEvent;
 type Position = [number, number];
+
 
 export default class SimLocalAnesthesia {
     private lang: string;
@@ -27,9 +37,6 @@ export default class SimLocalAnesthesia {
     private elem_canvas: HTMLCanvasElement;
 
     constructor() {
-        this.timer = new TimerStorage();
-        this.param = new Parameter();
-
         // objects for elements
         this.elem_newexp = <HTMLInputElement>document.getElementById("newexp");
         this.elem_start = <HTMLInputElement>document.getElementById("start");
@@ -73,10 +80,15 @@ export default class SimLocalAnesthesia {
         this.elem_canvas.addEventListener(clickEventType,
             (e: ClickEvent) => {
                 this.clickCanvas(this.elem_canvas, context, e)
-            }, false);
+            }, false); // main function
 
-        this.elem_slider.value = this.getStorageSpeed();
-        this.lang = this.getStorageLang();
+        // set Timer and Parameters
+        this.timer = new TimerStorage();
+        this.param = new Parameter();
+
+        // set & restore Parameters
+        this.elem_slider.value = getStorageSpeed();
+        this.lang = getStorageLang();
         this.elem_lang["la"].value = this.lang;
         this.setLang();
 
@@ -97,22 +109,29 @@ export default class SimLocalAnesthesia {
     //////////////////////////////////////////////////////////////////
 
     //////////////////////////////////
-    // mousedown in canvas area
+    // main function
+    //   mousedown in canvas area
+    //   get circle number
+    //   get and display response
     //////////////////////////////////
     private clickCanvas(canvas: HTMLCanvasElement,
                         context: CanvasRenderingContext2D,
                         e: ClickEvent): void {
         if (!this.timer.isRunning) { return }
+
         // running
+        // get clicked position and circle number (site)
         const pos = this.getClickedPosition(canvas, e);
         const site = getCircleNumber(pos, ConstVal.CENTERS, ConstVal.Rnormal);
 
         if (site < 0) { return }
-        // when clicked in circles
-        console.log(this.timer.getTimeStr);
-        const isResponse = getResponse(site, this.timer.getMinute,
+        // When clicked in circles,
+        //  get response from drug (site), time and parameters
+        const isResponse = getResponse(site,
+                                       this.timer.getMinute,
                                        this.param.getParameter);
 
+        // display response
         if (isResponse) {
             // effects with response
             Draw.fillRect(context, ConstVal.CENTERS[site], ConstVal.Rrespond);
@@ -140,15 +159,15 @@ export default class SimLocalAnesthesia {
     }
 
     //////////////////////////////////
-    // buttons
+    // select language
     //////////////////////////////////
-    // redraw buttons in each language
     private toggleLang(): void {
         this.lang = this.elem_lang["la"].value;
         this.setLang()
-        this.setStorageLang()
+        setStorageLang(this.lang)
     }
 
+    // change labels
     private setLang(): void {
         // start/restart/pause button
         // let lab;
@@ -171,7 +190,10 @@ export default class SimLocalAnesthesia {
         this.printSpeed(this.elem_slider.value)
     }
 
-    // push new experiment button
+    //////////////////////////////////
+    // buttons
+    //////////////////////////////////
+    // push New Experiment button
     private clickNewExp(): void {
         if (this.timer.isRunning) { return }
         // in pause
@@ -180,21 +202,23 @@ export default class SimLocalAnesthesia {
             this.timer.clickNewExp();
             this.param.setInitParameter();
             this.elem_slider.value = "1";
-            this.setStorageSpeed();
             this.setLang()
+            setStorageSpeed(this.elem_slider.value);
         }
     }
 
-    // push start/restart/pause button
+    // push Start/Restart/Pause button
     private clickStart(): void {
+        // When this.param is absent (after clickQuit),
+        //  generate new parameters
         this.param = new Parameter();
+
         this.timer.clickStart();
         this.setLang()
         this.toggleButton();
-        this.setStorageSpeed();
     }
 
-    // push quit button
+    // push Quit button
     private clickQuit(): void {
         if (this.timer.isRunning) { return }
         // in pause
@@ -205,8 +229,8 @@ export default class SimLocalAnesthesia {
             this.timer.clickQuit();
             this.elem_slider.value = "1";
             this.changeSpeed();
-            this.param.clearStorage();
-            this.clearStorage();
+            clearStorage();
+            clearStorageTimer();
         }
     }
 
@@ -224,13 +248,13 @@ export default class SimLocalAnesthesia {
     }
 
     //////////////////////////////////
-    // change slider
+    // change slider (speed)
     //////////////////////////////////
     private changeSpeed(): void {
         let speed: string = this.elem_slider.value;
         this.printSpeed(speed)
         this.timer.changeSpeed(Number(speed));
-        this.setStorageSpeed();
+        setStorageSpeed(speed);
     }
 
     private printSpeed(speed: string): void {
@@ -243,9 +267,10 @@ export default class SimLocalAnesthesia {
     // Get position in canvas
     //
     // Args:
-    //   canvas
-    //   e
-    // Return: [int:x, int:y]
+    //   canvas: HTMLCanvasElement
+    //   e: ClickEvent
+    // Return:
+    //   [int:x, int:y]: Position
     private getClickedPosition(canvas: HTMLCanvasElement,
                                e: ClickEvent): Position {
         let touch;
@@ -274,49 +299,16 @@ export default class SimLocalAnesthesia {
         const canvasX = Math.floor(x / scaleWidth);
         const canvasY = Math.floor(y / scaleHeight);
 
-        const position: Position = [canvasX, canvasY];
-        return position
+        return [canvasX, canvasY];
     }
 
 
     //////////////////////////////////
-    // timer
-    //////////////////////////////////
     // display timer
+    //////////////////////////////////
     displayTimer(): void {
         this.elem_timer.textContent = this.timer.getTimeStr;
         requestAnimationFrame(() => {this.displayTimer()});
-    }
-
-    //////////////////////////////////
-    // localStrage
-    //////////////////////////////////
-    // save data to localStorage
-    private setStorageSpeed(): void {
-        localStorage.setItem(ConstVal.storageNameSpeed, String(this.elem_slider.value));
-    }
-
-    // get data in localStorage
-    private getStorageSpeed(): string {
-        const speed = localStorage.getItem(ConstVal.storageNameSpeed);
-        return speed ? speed : "1";
-    }
-
-    // save data to localStorage (lang)
-    private setStorageLang(): void {
-        localStorage.setItem(ConstVal.storageNameLang, this.lang)
-    }
-
-    // get data in localStorage (lang)
-    private getStorageLang(): string {
-        const lang = localStorage.getItem(ConstVal.storageNameLang);
-        return lang ? lang : "en"
-    }
-
-    // delete data in localStorage
-    private clearStorage(): void {
-        localStorage.removeItem(ConstVal.storageNameSpeed);
-        localStorage.removeItem(ConstVal.storageNameLang);
     }
 }
 
