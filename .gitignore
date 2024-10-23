@@ -1,3 +1,6 @@
 *~
 node_modules
 coverage
+paper/paper.pdf
+paper/Fig/*.pdf
+jats
