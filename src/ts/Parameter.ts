@@ -1,5 +1,4 @@
 import * as ConstVal from "./ConstVal";
-import { random_norm } from "./MyStat";
 import MultivariateNormal from "multivariate-normal";
 import {
     getStorageParam,
@@ -23,10 +22,6 @@ export default class Parameter {
     }
 
     setInitParameter() {
-        // individual difference
-        const d = ConstVal.MU0_adj +
-                  random_norm(ConstVal.D_MU0[0], ConstVal.D_MU0[1]);
-
         // values of saline are 0
         // set parameters for Pro, Lid, Mep, Bup
         //   with random generator following to multivariate normal distribution
@@ -38,7 +33,7 @@ export default class Parameter {
 
         const n = 6;
         for (let i = 1; i < n - 1; i++) {
-            this.param[i][0] = ConstVal.MU0[i - 1][0] + d +
+            this.param[i][0] = ConstVal.MU0[i - 1][0] +
                                ConstVal.MU0[i - 1][1] * rand[i - 1];
             this.param[i][1] = Math.exp(
                 ConstVal.LOG_SIGMA0[i - 1][0] +
