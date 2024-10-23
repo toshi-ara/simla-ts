@@ -6,7 +6,6 @@ import {
 } from "./Storage"
 
 
-
 export default class TimerStorage extends Timer {
     constructor() {
         super();
@@ -38,9 +37,10 @@ export default class TimerStorage extends Timer {
     //////////////////////////////////
     // push new experiment button
     actionNewExp() {
-        if (this.isRunning) { return }
-        super.actionNewExp();
-        setStorageTimer(this.getJSONdata());
+        if (!this.isRunning) {
+            super.actionNewExp();
+            setStorageTimer(this.getJSONdata());
+        }
     };
 
     // push start/restart/pause button

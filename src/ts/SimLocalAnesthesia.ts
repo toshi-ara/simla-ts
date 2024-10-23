@@ -18,7 +18,10 @@ import {
 } from "./Storage"
 
 
+// PC or tablet (Click or tap event)
 type ClickEvent = MouseEvent | TouchEvent;
+const clickEventType = (window.ontouchstart === undefined) ? "mousedown" : "touchstart";
+
 type Position = [number, number];
 
 
@@ -65,10 +68,7 @@ export default class SimLocalAnesthesia {
                             ConstVal.Rnormal, ConstVal.RnormalCenter, "black")
         });
 
-        // PC or tablet
-        const clickEventType = (window.ontouchstart === undefined) ? "mousedown" : "touchstart";
-
-        // add EventListener to buttons, slider, timer and canvas
+        // add EventListener to buttons
         elem_newexp.addEventListener(clickEventType,
             () => { this.clickNewExp() }, false);
         elem_start.addEventListener(clickEventType,
@@ -76,6 +76,7 @@ export default class SimLocalAnesthesia {
         elem_quit.addEventListener(clickEventType,
             () => { this.clickQuit() }, false);
 
+        // add EventListener to droplist, slider and canvas
         elem_lang.addEventListener("change",
             () => { this.toggleLang() }, false);
         elem_slider.addEventListener("input",
@@ -100,7 +101,7 @@ export default class SimLocalAnesthesia {
 
         // display timer
         elem_timer.textContent = "0:00:00"
-    }
+    }  // constructor
 
     start() {
         // display timer
@@ -124,7 +125,7 @@ export default class SimLocalAnesthesia {
 
         // running
         // get clicked position and circle number (site)
-        const pos = this.getClickedPosition(canvas, e);
+        const pos = getClickedPosition(canvas, e);
         const site = getCircleNumber(pos, ConstVal.CENTERS, ConstVal.Rnormal);
 
         if (site < 0) { return }
@@ -133,32 +134,8 @@ export default class SimLocalAnesthesia {
         const isResponse = getResponse(site,
                                        this.timer.getMinute,
                                        this.param.getParameter);
-
         // display response
-        if (isResponse) {
-            // effects with response
-            Draw.fillRect(context, ConstVal.CENTERS[site], ConstVal.Rrespond);
-            Draw.drawCircle(context, ConstVal.CENTERS[site],
-                            ConstVal.Rrespond, ConstVal.RrespondCenter, "red");
-            elem_response.textContent = Labels["with_response"][this.lang];
-            elem_response.style.color = "red";
-            elem_timer.style.color = "red";
-
-            setTimeout(() => {
-                Draw.fillRect(context, ConstVal.CENTERS[site], ConstVal.Rrespond);
-                Draw.drawCircle(context, ConstVal.CENTERS[site],
-                                ConstVal.Rnormal, ConstVal.RnormalCenter, "black");
-                elem_response.textContent = "";
-                elem_timer.style.color = "black";
-            }, 300);
-        } else {
-            // effects without response
-            elem_response.textContent = Labels["without_response"][this.lang];
-            elem_response.style.color = "black";
-            setTimeout(() => {
-                elem_response.textContent = "";
-            }, 300);
-        }
+        responseDisplay(context, isResponse, site, this.lang, 300);
     }
 
     //////////////////////////////////
@@ -265,55 +242,98 @@ export default class SimLocalAnesthesia {
     }
 
     //////////////////////////////////
-    //
-    // function for simulation
-    // Get position in canvas
-    //
-    // Args:
-    //   canvas: HTMLCanvasElement
-    //   e: ClickEvent
-    // Return:
-    //   [int:x, int:y]: Position
-    //
-    //////////////////////////////////
-    private getClickedPosition(canvas: HTMLCanvasElement,
-                               e: ClickEvent): Position {
-        let touch;
-        const borderWidth = 0;
-
-        // https://cpoint-lab.co.jp/article/202111/21267/
-        const isTouchEvent = (e: ClickEvent):
-            e is TouchEvent => e.type === 'touchstart';
-
-        if (isTouchEvent(e)) {
-            touch = e.touches[0] || e.changedTouches[0];
-        } else {
-            touch = e;
-        }
-
-        const e_target = <Element>e.target!;
-        const rect = e_target.getBoundingClientRect();
-
-        const x = touch.clientX - rect.left - borderWidth;
-        const y = touch.clientY - rect.top - borderWidth;
-
-        // ratio of display size and real size of canvas
-        const scaleWidth = canvas.clientWidth / canvas.width;
-        const scaleHeight = canvas.clientHeight / canvas.height;
-        // convert position in browser to that in canvas
-        const canvasX = Math.floor(x / scaleWidth);
-        const canvasY = Math.floor(y / scaleHeight);
-
-        return [canvasX, canvasY];
-    }
-
-
-    //////////////////////////////////
     // display timer
     //////////////////////////////////
     displayTimer(): void {
         elem_timer.textContent = this.timer.getTimeStr;
         requestAnimationFrame(() => { this.displayTimer() });
+    }
+}
+
+
+//////////////////////////////////
+//
+// Get position in canvas
+//
+// Args:
+//   canvas: HTMLCanvasElement
+//   e: ClickEvent
+// Return:
+//   [int:x, int:y]: Position
+//
+//////////////////////////////////
+function getClickedPosition(canvas: HTMLCanvasElement,
+                           e: ClickEvent): Position {
+    let touch;
+    const borderWidth = 0;
+
+    // https://cpoint-lab.co.jp/article/202111/21267/
+    const isTouchEvent = (e: ClickEvent):
+        e is TouchEvent => e.type === 'touchstart';
+
+    if (isTouchEvent(e)) {
+        touch = e.touches[0] || e.changedTouches[0];
+    } else {
+        touch = e;
+    }
+
+    const e_target = <Element>e.target!;
+    const rect = e_target.getBoundingClientRect();
+
+    const x = touch.clientX - rect.left - borderWidth;
+    const y = touch.clientY - rect.top - borderWidth;
+
+    // ratio of display size and real size of canvas
+    const scaleWidth = canvas.clientWidth / canvas.width;
+    const scaleHeight = canvas.clientHeight / canvas.height;
+    // convert position in browser to that in canvas
+    const canvasX = Math.floor(x / scaleWidth);
+    const canvasY = Math.floor(y / scaleHeight);
+
+    return [canvasX, canvasY];
+}
+
+
+//////////////////////////////////
+//
+// Display response
+//
+// args:
+//   context
+//   isResponse: boolean
+//   site: number (Drug number)
+//   lang: string
+//   duration: number (msec)
+//
+//////////////////////////////////
+function responseDisplay(context: CanvasRenderingContext2D,
+                         isResponse: boolean,
+                         site: number,
+                         lang: string,
+                         duration: number): void {
+    if (isResponse) {
+        // effects with response
+        Draw.fillRect(context, ConstVal.CENTERS[site], ConstVal.Rrespond);
+        Draw.drawCircle(context, ConstVal.CENTERS[site],
+                        ConstVal.Rrespond, ConstVal.RrespondCenter, "red");
+        elem_response.textContent = Labels["with_response"][lang];
+        elem_response.style.color = "red";
+        elem_timer.style.color = "red";
+
+        setTimeout(() => {
+            Draw.fillRect(context, ConstVal.CENTERS[site], ConstVal.Rrespond);
+            Draw.drawCircle(context, ConstVal.CENTERS[site],
+                            ConstVal.Rnormal, ConstVal.RnormalCenter, "black");
+            elem_response.textContent = "";
+            elem_timer.style.color = "black";
+        }, 300);
+    } else {
+        // effects without response
+        elem_response.textContent = Labels["without_response"][lang];
+        elem_response.style.color = "black";
+        setTimeout(() => {
+            elem_response.textContent = "";
+        }, 300);
     }
 }
 
