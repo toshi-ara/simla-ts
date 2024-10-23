@@ -37,21 +37,21 @@ export default class TimerStorage extends Timer {
     // push buttons / change slider
     //////////////////////////////////
     // push new experiment button
-    clickNewExp() {
+    actionNewExp() {
         if (this.isRunning) { return }
-        super.clickNewExp();
+        super.actionNewExp();
         setStorageTimer(this.getJSONdata());
     };
 
     // push start/restart/pause button
-    clickStart() {
-        super.clickStart();
+    actionStart() {
+        super.actionStart();
         setStorageTimer(this.getJSONdata());
     };
 
     // push quit button
-    clickQuit() {
-        super.clickQuit();
+    actionQuit() {
+        super.actionQuit();
         if (!this.isRunning) {
             clearStorageTimer();
         }

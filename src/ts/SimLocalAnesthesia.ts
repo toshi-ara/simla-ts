@@ -22,36 +22,39 @@ type ClickEvent = MouseEvent | TouchEvent;
 type Position = [number, number];
 
 
+// variables for elements in HTML
+let elem_newexp: HTMLInputElement;
+let elem_start: HTMLInputElement;
+let elem_quit: HTMLInputElement;
+let elem_speed_msg: HTMLElement;
+let elem_timer: HTMLElement;
+let elem_response: HTMLElement;
+let elem_lang: HTMLFormElement;
+let elem_slider: HTMLSelectElement;
+let elem_canvas: HTMLCanvasElement;
+
+
 export default class SimLocalAnesthesia {
     private lang: string;
     private timer: TimerStorage;
     private param: Parameter;
-    private elem_newexp: HTMLInputElement;
-    private elem_start: HTMLInputElement;
-    private elem_quit: HTMLInputElement;
-    private elem_speed_msg: HTMLElement;
-    private elem_timer: HTMLElement;
-    private elem_response: HTMLElement;
-    private elem_lang: HTMLFormElement;
-    private elem_slider: HTMLSelectElement;
-    private elem_canvas: HTMLCanvasElement;
 
     constructor() {
         // objects for elements
-        this.elem_newexp = <HTMLInputElement>document.getElementById("newexp");
-        this.elem_start = <HTMLInputElement>document.getElementById("start");
-        this.elem_quit = <HTMLInputElement>document.getElementById("quit");
+        elem_newexp = <HTMLInputElement>document.getElementById("newexp");
+        elem_start = <HTMLInputElement>document.getElementById("start");
+        elem_quit = <HTMLInputElement>document.getElementById("quit");
 
-        this.elem_speed_msg = <HTMLElement>document.getElementById("speed_msg");
-        this.elem_timer = <HTMLElement>document.getElementById("timer");
-        this.elem_response = <HTMLElement>document.getElementById("response");
+        elem_speed_msg = <HTMLElement>document.getElementById("speed_msg");
+        elem_timer = <HTMLElement>document.getElementById("timer");
+        elem_response = <HTMLElement>document.getElementById("response");
 
-        this.elem_lang = <HTMLFormElement>document.getElementById("select-lang");
-        this.elem_slider = <HTMLSelectElement>document.getElementById("slider");
-        this.elem_canvas = <HTMLCanvasElement>document.getElementById("canvas");
+        elem_lang = <HTMLFormElement>document.getElementById("select-lang");
+        elem_slider = <HTMLSelectElement>document.getElementById("slider");
+        elem_canvas = <HTMLCanvasElement>document.getElementById("canvas");
 
         // set canvas
-        const context = this.elem_canvas.getContext("2d")!;
+        const context = elem_canvas.getContext("2d")!;
         const img = new Image();
 
         // display image
@@ -66,20 +69,20 @@ export default class SimLocalAnesthesia {
         const clickEventType = (window.ontouchstart === undefined) ? "mousedown" : "touchstart";
 
         // add EventListener to buttons, slider, timer and canvas
-        this.elem_newexp.addEventListener(clickEventType,
+        elem_newexp.addEventListener(clickEventType,
             () => { this.clickNewExp() }, false);
-        this.elem_start.addEventListener(clickEventType,
+        elem_start.addEventListener(clickEventType,
             () => { this.clickStart() }, false);
-        this.elem_quit.addEventListener(clickEventType,
+        elem_quit.addEventListener(clickEventType,
             () => { this.clickQuit() }, false);
 
-        this.elem_lang.addEventListener("change",
+        elem_lang.addEventListener("change",
             () => { this.toggleLang() }, false);
-        this.elem_slider.addEventListener("input",
+        elem_slider.addEventListener("input",
             () => { this.changeSpeed() }, false);
-        this.elem_canvas.addEventListener(clickEventType,
+        elem_canvas.addEventListener(clickEventType,
             (e: ClickEvent) => {
-                this.clickCanvas(this.elem_canvas, context, e)
+                this.clickCanvas(elem_canvas, context, e)
             }, false); // main function
 
         // set Timer and Parameters
@@ -87,16 +90,16 @@ export default class SimLocalAnesthesia {
         this.param = new Parameter();
 
         // set & restore Parameters
-        this.elem_slider.value = getStorageSpeed();
+        elem_slider.value = getStorageSpeed();
         this.lang = getStorageLang();
-        this.elem_lang["la"].value = this.lang;
+        elem_lang["la"].value = this.lang;
         this.setLang();
 
         // change buttons status (color)
         this.toggleButton();
 
         // display timer
-        this.elem_timer.textContent = "0:00:00"
+        elem_timer.textContent = "0:00:00"
     }
 
     start() {
@@ -137,23 +140,23 @@ export default class SimLocalAnesthesia {
             Draw.fillRect(context, ConstVal.CENTERS[site], ConstVal.Rrespond);
             Draw.drawCircle(context, ConstVal.CENTERS[site],
                             ConstVal.Rrespond, ConstVal.RrespondCenter, "red");
-            this.elem_response.textContent = Labels["with_response"][this.lang];
-            this.elem_response.style.color = "red";
-            this.elem_timer.style.color = "red";
+            elem_response.textContent = Labels["with_response"][this.lang];
+            elem_response.style.color = "red";
+            elem_timer.style.color = "red";
 
             setTimeout(() => {
                 Draw.fillRect(context, ConstVal.CENTERS[site], ConstVal.Rrespond);
                 Draw.drawCircle(context, ConstVal.CENTERS[site],
                                 ConstVal.Rnormal, ConstVal.RnormalCenter, "black");
-                this.elem_response.textContent = "";
-                this.elem_timer.style.color = "black";
+                elem_response.textContent = "";
+                elem_timer.style.color = "black";
             }, 300);
         } else {
             // effects without response
-            this.elem_response.textContent = Labels["without_response"][this.lang];
-            this.elem_response.style.color = "black";
+            elem_response.textContent = Labels["without_response"][this.lang];
+            elem_response.style.color = "black";
             setTimeout(() => {
-                this.elem_response.textContent = "";
+                elem_response.textContent = "";
             }, 300);
         }
     }
@@ -162,7 +165,7 @@ export default class SimLocalAnesthesia {
     // select language
     //////////////////////////////////
     private toggleLang(): void {
-        this.lang = this.elem_lang["la"].value;
+        this.lang = elem_lang["la"].value;
         this.setLang()
         setStorageLang(this.lang)
     }
@@ -181,13 +184,13 @@ export default class SimLocalAnesthesia {
                 id = "restart";
             }
         }
-        this.elem_start.textContent = Labels[id][this.lang];
-        this.elem_newexp.textContent = Labels["newexp"][this.lang];
-        this.elem_quit.textContent = Labels["quit"][this.lang];
+        elem_start.textContent = Labels[id][this.lang];
+        elem_newexp.textContent = Labels["newexp"][this.lang];
+        elem_quit.textContent = Labels["quit"][this.lang];
         this.toggleButton();
 
         // slider
-        this.printSpeed(this.elem_slider.value)
+        this.printSpeed(elem_slider.value)
     }
 
     //////////////////////////////////
@@ -199,11 +202,11 @@ export default class SimLocalAnesthesia {
         // in pause
         const check = window.confirm(Labels["msg_newexp"][this.lang]);
         if (check) {
-            this.timer.clickNewExp();
+            this.timer.actionNewExp();
             this.param.setInitParameter();
-            this.elem_slider.value = "1";
+            elem_slider.value = "1";
             this.setLang()
-            setStorageSpeed(this.elem_slider.value);
+            setStorageSpeed(elem_slider.value);
         }
     }
 
@@ -213,7 +216,7 @@ export default class SimLocalAnesthesia {
         //  generate new parameters
         this.param = new Parameter();
 
-        this.timer.clickStart();
+        this.timer.actionStart();
         this.setLang()
         this.toggleButton();
     }
@@ -225,9 +228,9 @@ export default class SimLocalAnesthesia {
         const check = window.confirm(Labels["msg_quit"][this.lang]);
         if (check) {
             window.alert(Labels["msg_close"][this.lang]);
-            this.elem_start.textContent = Labels["start"][this.lang];
-            this.timer.clickQuit();
-            this.elem_slider.value = "1";
+            elem_start.textContent = Labels["start"][this.lang];
+            this.timer.actionQuit();
+            elem_slider.value = "1";
             this.changeSpeed();
             clearStorage();
             clearStorageTimer();
@@ -237,13 +240,13 @@ export default class SimLocalAnesthesia {
     // change buttons status (color)
     private toggleButton(): void {
         if (this.timer.isRunning) {
-            this.elem_start.style.background = "springgreen";
-            this.elem_newexp.style.color = "gray";
-            this.elem_quit.style.color = "gray";
+            elem_start.style.background = "springgreen";
+            elem_newexp.style.color = "gray";
+            elem_quit.style.color = "gray";
         } else {
-            this.elem_start.style.background = "cyan";
-            this.elem_newexp.style.color = "black";
-            this.elem_quit.style.color = "black";
+            elem_start.style.background = "cyan";
+            elem_newexp.style.color = "black";
+            elem_quit.style.color = "black";
         }
     }
 
@@ -251,14 +254,14 @@ export default class SimLocalAnesthesia {
     // change slider (speed)
     //////////////////////////////////
     private changeSpeed(): void {
-        let speed: string = this.elem_slider.value;
+        let speed: string = elem_slider.value;
         this.printSpeed(speed)
         this.timer.changeSpeed(Number(speed));
         setStorageSpeed(speed);
     }
 
     private printSpeed(speed: string): void {
-        this.elem_speed_msg.textContent = speed + Labels["speed"][this.lang];
+        elem_speed_msg.textContent = speed + Labels["speed"][this.lang];
     }
 
     //////////////////////////////////
@@ -309,7 +312,7 @@ export default class SimLocalAnesthesia {
     // display timer
     //////////////////////////////////
     displayTimer(): void {
-        this.elem_timer.textContent = this.timer.getTimeStr;
+        elem_timer.textContent = this.timer.getTimeStr;
         requestAnimationFrame(() => { this.displayTimer() });
     }
 }

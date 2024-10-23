@@ -13,31 +13,31 @@ import Timer from "../src/ts/Timer";
 jest.useFakeTimers();
 
 describe("Check Timer class", () => {
-    it("Check isRunning/click* functions", () => {
+    it("Check isRunning/action* functions", () => {
         let timer = new Timer();
 
         // befor start
-        timer.clickNewExp();
+        timer.actionNewExp();
         expect(timer.isRunning).toEqual(false);
 
         // start
-        timer.clickStart();
+        timer.actionStart();
         expect(timer.isRunning).toEqual(true);
 
         // stop
-        timer.clickStart()
+        timer.actionStart()
         expect(timer.isRunning).toEqual(false);
 
         // quit (in not running)
-        timer.clickQuit()
+        timer.actionQuit()
         expect(timer.isRunning).toEqual(false);
 
         // quit (in running)
-        timer.clickStart() // isRunning => true
+        timer.actionStart() // isRunning => true
         expect(timer.isRunning).toEqual(true);
 
         // stop
-        timer.clickStart()
+        timer.actionStart()
     });
 
     it("Check getTime/changeSpeed function", () => {
@@ -45,10 +45,10 @@ describe("Check Timer class", () => {
         jest.runAllTimers()
 
         // befor start
-        timer.clickNewExp();
+        timer.actionNewExp();
 
         // start
-        timer.clickStart();
+        timer.actionStart();
 
         // pass 3 sec
         //  => 3000 (msec)
@@ -76,7 +76,7 @@ describe("Check Timer class", () => {
 
         // stop
         // no change
-        timer.clickStart()
+        timer.actionStart()
         jest.advanceTimersByTime(1000);
         expect(timer.getTime).toEqual(30000);
     });
@@ -86,10 +86,10 @@ describe("Check Timer class", () => {
         jest.runAllTimers()
 
         // befor start
-        timer.clickNewExp();
+        timer.actionNewExp();
 
         // start
-        timer.clickStart();
+        timer.actionStart();
 
         // pass 3 sec
         //  => 3000 (msec)
@@ -116,7 +116,7 @@ describe("Check Timer class", () => {
         expect(timer.getMinute).toEqual(30000/60000);
 
         // stop
-        timer.clickStart()
+        timer.actionStart()
     });
 
     it("Check getMinute/changeSpeed function ver. 2", () => {
@@ -124,10 +124,10 @@ describe("Check Timer class", () => {
         jest.runAllTimers()
 
         // befor start
-        timer.clickNewExp();
+        timer.actionNewExp();
 
         // start
-        timer.clickStart();
+        timer.actionStart();
 
         // pass 3 sec
         //  => 3000 (msec)
@@ -151,7 +151,7 @@ describe("Check Timer class", () => {
         expect(timer.getMinute).toEqual(30000/60000);
 
         // stop
-        timer.clickStart()
+        timer.actionStart()
     });
 
     it("Check getTimeStr function", () => {
@@ -159,10 +159,10 @@ describe("Check Timer class", () => {
         jest.runAllTimers()
 
         // befor start
-        timer.clickNewExp();
+        timer.actionNewExp();
 
         // start
-        timer.clickStart();
+        timer.actionStart();
 
         // pass 3 sec
         //  => 3000 (msec)
@@ -189,7 +189,7 @@ describe("Check Timer class", () => {
         expect(timer.getTimeStr).toEqual("1:05:18");
 
         // stop
-        timer.clickStart()
+        timer.actionStart()
     });
 });
 

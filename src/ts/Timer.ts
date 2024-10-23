@@ -53,7 +53,7 @@ export default class Timer {
     //////////////////////////////////
 
     // push New Experiment Button
-    clickNewExp() {
+    actionNewExp() {
         if (!this.isRunning) {
             this._elapsed = 0;
             this._total = 0;
@@ -61,7 +61,7 @@ export default class Timer {
     };
 
     // push Start/Restart/Pause Button
-    clickStart() {
+    actionStart() {
         if (!this.isRunning) { // before start / in pause
             this._start = Date.now();
             this._elapsed = 0;
@@ -75,7 +75,7 @@ export default class Timer {
     };
 
     // push Quit Button
-    clickQuit() {
+    actionQuit() {
         if (!this.isRunning) { // before start / in pause
             this._elapsed = 0;
             this._total = 0;
