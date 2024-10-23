@@ -26,14 +26,3 @@ export function phi(x: number, upper: boolean = false): number {
     return (1 + signup * sign * erf) * 0.5;
 }
 
-// Random generation according to standard normal distribution
-// Box-Muller transform
-// https://qiita.com/kyonsi/items/579a61edab661f27e3a5
-export function random_norm(mu = 0, sd = 1): number {
-    let x = Math.random();
-    let y = Math.random();
-    let z1 = Math.sqrt(-2 * Math.log(x)) * Math.cos(2 * Math.PI  * y);
-    // let z2 = Math.sqrt(-2 * Math.log(x)) * Math.sin(2 * Math.PI  * y);
-    return mu + z1 * sd;
-}
-
