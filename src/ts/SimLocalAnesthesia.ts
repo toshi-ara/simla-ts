@@ -67,16 +67,16 @@ export default class SimLocalAnesthesia {
 
         // add EventListener to buttons, slider, timer and canvas
         this.elem_newexp.addEventListener(clickEventType,
-            () => {this.clickNewExp()}, false);
+            () => { this.clickNewExp() }, false);
         this.elem_start.addEventListener(clickEventType,
-            () => {this.clickStart()}, false);
+            () => { this.clickStart() }, false);
         this.elem_quit.addEventListener(clickEventType,
-            () => {this.clickQuit()}, false);
+            () => { this.clickQuit() }, false);
 
         this.elem_lang.addEventListener("change",
-            () => {this.toggleLang()}, false);
+            () => { this.toggleLang() }, false);
         this.elem_slider.addEventListener("input",
-            () => {this.changeSpeed()}, false);
+            () => { this.changeSpeed() }, false);
         this.elem_canvas.addEventListener(clickEventType,
             (e: ClickEvent) => {
                 this.clickCanvas(this.elem_canvas, context, e)
@@ -262,8 +262,8 @@ export default class SimLocalAnesthesia {
     }
 
     //////////////////////////////////
+    //
     // function for simulation
-    //////////////////////////////////
     // Get position in canvas
     //
     // Args:
@@ -271,6 +271,8 @@ export default class SimLocalAnesthesia {
     //   e: ClickEvent
     // Return:
     //   [int:x, int:y]: Position
+    //
+    //////////////////////////////////
     private getClickedPosition(canvas: HTMLCanvasElement,
                                e: ClickEvent): Position {
         let touch;
@@ -308,7 +310,7 @@ export default class SimLocalAnesthesia {
     //////////////////////////////////
     displayTimer(): void {
         this.elem_timer.textContent = this.timer.getTimeStr;
-        requestAnimationFrame(() => {this.displayTimer()});
+        requestAnimationFrame(() => { this.displayTimer() });
     }
 }
 
