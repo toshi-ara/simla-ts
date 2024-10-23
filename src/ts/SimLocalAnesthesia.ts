@@ -43,18 +43,8 @@ export default class SimLocalAnesthesia {
     private param: Parameter;
 
     constructor() {
-        // objects for elements
-        elem_newexp = <HTMLInputElement>document.getElementById("newexp");
-        elem_start = <HTMLInputElement>document.getElementById("start");
-        elem_quit = <HTMLInputElement>document.getElementById("quit");
-
-        elem_speed_msg = <HTMLElement>document.getElementById("speed_msg");
-        elem_timer = <HTMLElement>document.getElementById("timer");
-        elem_response = <HTMLElement>document.getElementById("response");
-
-        elem_lang = <HTMLFormElement>document.getElementById("select-lang");
-        elem_slider = <HTMLSelectElement>document.getElementById("slider");
-        elem_canvas = <HTMLCanvasElement>document.getElementById("canvas");
+        // set elements in HTML
+        setElements();
 
         // set canvas
         const context = elem_canvas.getContext("2d")!;
@@ -249,6 +239,26 @@ export default class SimLocalAnesthesia {
         requestAnimationFrame(() => { this.displayTimer() });
     }
 }
+
+
+
+//////////////////////////////////
+// Set elements
+//////////////////////////////////
+function setElements(): void {
+    elem_newexp = <HTMLInputElement>document.getElementById("newexp");
+    elem_start = <HTMLInputElement>document.getElementById("start");
+    elem_quit = <HTMLInputElement>document.getElementById("quit");
+
+    elem_speed_msg = <HTMLElement>document.getElementById("speed_msg");
+    elem_timer = <HTMLElement>document.getElementById("timer");
+    elem_response = <HTMLElement>document.getElementById("response");
+
+    elem_lang = <HTMLFormElement>document.getElementById("select-lang");
+    elem_slider = <HTMLSelectElement>document.getElementById("slider");
+    elem_canvas = <HTMLCanvasElement>document.getElementById("canvas");
+}
+
 
 
 //////////////////////////////////
