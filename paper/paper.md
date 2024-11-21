@@ -23,7 +23,7 @@ affiliations:
  - name: Department of Oral Diagnostics and Comprehensive Dentistry, Matsumoto Dental University Hospital, Shiojiri, Nagano, Japan
 
 
-date: 24 October 2024
+date: 21 November 2024
 bibliography: paper.bib
 
 # Optional fields if submitting to a AAS journal too, see this blog post:
