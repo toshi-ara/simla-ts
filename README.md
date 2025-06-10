@@ -139,6 +139,10 @@ It is also possible to use
 
 
 ## ChangeLog
+### v2.1.1 (2025-6-10)
+- add language: Traditional Chinese
+- update npm packages
+
 ### v2.1.0 (2024-10-23)
 - Refacting codes
     - including separation of files
