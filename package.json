@@ -1,6 +1,6 @@
 {
   "name": "simla-ts",
-  "version": "2.1.1",
+  "version": "2.2.1",
   "description": "Simulator for local anesthetic agents",
   "main": "webpack.config.js",
   "scripts": {

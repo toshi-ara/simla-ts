@@ -139,6 +139,16 @@ It is also possible to use
 
 
 ## ChangeLog
+### v2.2.1 (2025-11-10)
+- replace the MultivariateNormal package with ml-matrix and
+  created custom functions
+- update npm packages
+- fix
+
+- Fixes- MultivariateNormalパッケージをml-matrixに置き換え関数を自作
+- npmパッケージの更新
+- fix
+
 ### v2.1.1 (2025-6-10)
 - add language: Traditional Chinese
 - update npm packages
