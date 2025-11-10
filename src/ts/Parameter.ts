@@ -1,5 +1,6 @@
 import * as ConstVal from "./ConstVal";
-import MultivariateNormal from "multivariate-normal";
+import { multivariateNormal } from "./MyStat";
+// import MultivariateNormal from "multivariate-normal";
 import {
     getStorageParam,
     setStorageParam
@@ -27,9 +28,8 @@ export default class Parameter {
         //   with random generator following to multivariate normal distribution
         //   using "multivariate-normal" package
         const meanVector = [0, 0, 0, 0, 0, 0, 0, 0];
-        const distribution = MultivariateNormal(meanVector,
-                                                ConstVal.covarianceMatrix);
-        const rand = distribution.sample();
+        const rands = multivariateNormal(meanVector, ConstVal.covarianceMatrix, 1);
+        const rand = rands[0];
 
         const n = 6;
         for (let i = 1; i < n - 1; i++) {
