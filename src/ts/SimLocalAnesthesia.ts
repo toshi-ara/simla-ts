@@ -172,6 +172,7 @@ export default class SimLocalAnesthesia {
             this.timer.actionNewExp();
             this.param.setInitParameter();
             elem_slider.value = "1";
+            this.changeSpeed();
             this.setLang()
             setStorageSpeed(elem_slider.value);
         }
