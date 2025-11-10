@@ -124,6 +124,11 @@ GitHub上の[別リポジトリのコード](https://github.com/toshi-ara/simla)
 
 
 ## 変更履歴
+### v2.2.1 (2025-11-10)
+- MultivariateNormalパッケージをml-matrixに置き換え関数を自作
+- npmパッケージの更新
+- fix
+
 ### v2.1.1 (2025-6-10)
 - 言語追加：中国語（繁体）
 - npmパッケージの更新
