@@ -11,7 +11,6 @@
   "author": "ARA Toshiaki",
   "license": "MIT license",
   "devDependencies": {
-    "@types/multivariate-normal": "^0.1.4",
     "css-loader": "^7.1.2",
     "npm-check-updates": "^19.1.2",
     "style-loader": "^4.0.0",
